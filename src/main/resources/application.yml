@@ -18,6 +18,6 @@ spring:
     products:
       url: jdbc:mysql://mysql:3306/mysql?allowPublicKeyRetrieval=true&useSSL=false
       username: root
-      password: mauFJcuf5dhRMQrjj
+      password: abcABC123*
       driverClassName: com.mysql.cj.jdbc.Driver
 
