@@ -1,0 +1,60 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    container_name: manydbs
+    depends_on:
+      - postgres
+      - mysql
+    ports:
+      - "8080:8080"
+    networks:
+      - manydbs_network
+
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=shoppass
+      - POSTGRES_USER=shop
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=shop
+    container_name: postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - manydbs_network
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U shop" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    cap_add:
+      - SYS_NICE
+    restart: always
+    environment:
+      - MYSQL_DATABASE=quotes
+      - MYSQL_ROOT_PASSWORD=abcABC123*
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=abcABC123*
+    ports:
+      - '3306:3306'
+    networks:
+      - manydbs_network
+    healthcheck:
+      test: [ "CMD-SHELL", "mysqladmin ping -h localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  manydbs_network:
+    driver: bridge
